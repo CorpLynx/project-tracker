@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Tracker</title>
+<meta name="description" content="Completion tracker for CorpLynx's projects.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f5f1;
+    --surface: #ffffff;
+    --surface-2: #efede7;
+    --border: #e1ded5;
+    --text: #1d1c19;
+    --muted: #6b675d;
+    --accent: #2f6f4f;
+    --accent-soft: #dcebe2;
+    --doing: #b7791f;
+    --doing-soft: #f6e9d2;
+    --todo: #9a958a;
+    --paused: #7a6f9b;
+    --paused-soft: #e6e2f1;
+    --done-status: #2b5d8a;
+    --done-status-soft: #dde8f3;
+    --track: #e7e4dc;
+    --shadow: 0 1px 2px rgba(30, 28, 20, .06), 0 4px 16px rgba(30, 28, 20, .05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121311;
+      --surface: #1a1c19;
+      --surface-2: #232622;
+      --border: #2e322d;
+      --text: #ecebe6;
+      --muted: #9b9a92;
+      --accent: #6cc395;
+      --accent-soft: #1f3a2c;
+      --doing: #e3a94a;
+      --doing-soft: #3b2f1a;
+      --todo: #6f6e67;
+      --paused: #b0a6d6;
+      --paused-soft: #2c2940;
+      --done-status: #7fb3e3;
+      --done-status-soft: #1d2d3d;
+      --track: #2a2d29;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 16px rgba(0, 0, 0, .25);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121311;
+    --surface: #1a1c19;
+    --surface-2: #232622;
+    --border: #2e322d;
+    --text: #ecebe6;
+    --muted: #9b9a92;
+    --accent: #6cc395;
+    --accent-soft: #1f3a2c;
+    --doing: #e3a94a;
+    --doing-soft: #3b2f1a;
+    --todo: #6f6e67;
+    --paused: #b0a6d6;
+    --paused-soft: #2c2940;
+    --done-status: #7fb3e3;
+    --done-status-soft: #1d2d3d;
+    --track: #2a2d29;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 16px rgba(0, 0, 0, .25);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.5 Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+
+  header { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+  h1 { font-size: 28px; line-height: 1.15; margin: 0 0 4px; letter-spacing: -.02em; }
+  .sub { color: var(--muted); margin: 0; }
+  .sub a { color: inherit; }
+  .icon-btn {
+    border: 1px solid var(--border); background: var(--surface); color: var(--text);
+    border-radius: 8px; padding: 7px 12px; font: inherit; font-size: 13px; cursor: pointer;
+  }
+  .icon-btn:hover { background: var(--surface-2); }
+
+  .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; box-shadow: var(--shadow); }
+  .kpi .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .kpi .value { font-size: 28px; font-weight: 700; letter-spacing: -.02em; margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .kpi .value small { font-size: 14px; font-weight: 500; color: var(--muted); }
+
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 18px; }
+  .search {
+    flex: 1 1 220px; min-width: 0; border: 1px solid var(--border); background: var(--surface); color: var(--text);
+    border-radius: 8px; padding: 8px 12px; font: inherit;
+  }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    border: 1px solid var(--border); background: var(--surface); color: var(--muted);
+    border-radius: 999px; padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer;
+  }
+  .chip[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+  select {
+    border: 1px solid var(--border); background: var(--surface); color: var(--text);
+    border-radius: 8px; padding: 7px 10px; font: inherit; font-size: 13px;
+  }
+
+  .banner {
+    display: none; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    background: var(--doing-soft); border: 1px solid var(--doing); border-radius: 10px;
+    padding: 10px 14px; margin-bottom: 16px; font-size: 14px;
+  }
+  .banner.show { display: flex; }
+  .banner .actions { display: flex; gap: 8px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    box-shadow: var(--shadow); padding: 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0;
+  }
+  .card-top { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+  .card h2 { font-size: 17px; margin: 0; letter-spacing: -.01em; }
+  .cat { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .status {
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
+    padding: 3px 8px; border-radius: 999px; white-space: nowrap;
+  }
+  .status.active { background: var(--accent-soft); color: var(--accent); }
+  .status.paused { background: var(--paused-soft); color: var(--paused); }
+  .status.done { background: var(--done-status-soft); color: var(--done-status); }
+  .tagline { color: var(--muted); margin: 0; font-size: 14px; }
+
+  .progress { display: flex; align-items: center; gap: 10px; }
+  .bar { flex: 1; height: 8px; border-radius: 999px; background: var(--track); overflow: hidden; display: flex; }
+  .bar .d { background: var(--accent); }
+  .bar .p { background: var(--doing); opacity: .75; }
+  .pct { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 42px; text-align: right; }
+
+  .meta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+  .meta a { color: inherit; text-decoration: none; border-bottom: 1px dotted var(--muted); }
+  .meta a:hover { color: var(--text); }
+
+  .next { font-size: 13px; background: var(--surface-2); border-radius: 8px; padding: 8px 10px; }
+  .next b { font-weight: 600; }
+
+  details summary {
+    cursor: pointer; font-size: 13px; color: var(--muted); list-style: none; user-select: none;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "▸ "; }
+  details[open] summary::before { content: "▾ "; }
+  ul.ms { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  ul.ms li { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; }
+  .state {
+    flex: none; width: 20px; height: 20px; margin-top: 1px; border-radius: 6px; cursor: pointer;
+    border: 1.5px solid var(--todo); background: transparent; padding: 0; display: grid; place-items: center;
+    color: #fff; font-size: 12px; line-height: 1;
+  }
+  .state.done { background: var(--accent); border-color: var(--accent); }
+  .state.doing { border-color: var(--doing); background: linear-gradient(90deg, var(--doing) 50%, transparent 50%); }
+  .state:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+  li.done .t { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--border); }
+  .legend { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+  .empty { color: var(--muted); text-align: center; padding: 48px 0; }
+  footer { margin-top: 40px; font-size: 12px; color: var(--muted); }
+
+  @media (max-width: 720px) {
+    .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid { grid-template-columns: 1fr; }
+    h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Project Tracker</h1>
+      <p class="sub">What <a href="https://github.com/CorpLynx">CorpLynx</a> is building, and how far along each one is. <span id="updated"></span></p>
+    </div>
+    <button class="icon-btn" id="theme" type="button" aria-label="Toggle color theme">Theme</button>
+  </header>
+
+  <section class="kpis" aria-label="Summary">
+    <div class="kpi"><div class="label">Overall</div><div class="value" id="k-overall">–</div></div>
+    <div class="kpi"><div class="label">Milestones</div><div class="value" id="k-ms">–</div></div>
+    <div class="kpi"><div class="label">Active</div><div class="value" id="k-active">–</div></div>
+    <div class="kpi"><div class="label">In progress</div><div class="value" id="k-doing">–</div></div>
+  </section>
+
+  <div class="banner" id="banner" role="status">
+    <span>You have local edits. They're saved in this browser only. Export the file and commit it to make them public.</span>
+    <span class="actions">
+      <button class="icon-btn" id="export" type="button">Export projects.json</button>
+      <button class="icon-btn" id="reset" type="button">Discard edits</button>
+    </span>
+  </div>
+
+  <div class="controls">
+    <input class="search" id="q" type="search" placeholder="Search projects or milestones" aria-label="Search">
+    <div class="chips" id="status-chips" role="group" aria-label="Filter by status">
+      <button class="chip" data-status="all" aria-pressed="true" type="button">All</button>
+      <button class="chip" data-status="active" aria-pressed="false" type="button">Active</button>
+      <button class="chip" data-status="paused" aria-pressed="false" type="button">Paused</button>
+      <button class="chip" data-status="done" aria-pressed="false" type="button">Done</button>
+    </div>
+    <select id="cat" aria-label="Filter by category"><option value="all">All categories</option></select>
+    <select id="sort" aria-label="Sort">
+      <option value="pct-desc">Most complete</option>
+      <option value="pct-asc">Least complete</option>
+      <option value="pushed">Recently pushed</option>
+      <option value="name">Name</option>
+    </select>
+  </div>
+
+  <main class="grid" id="grid"></main>
+  <p class="empty" id="empty" hidden>No projects match.</p>
+
+  <footer>
+    Click a milestone's box to cycle it: to do → in progress → done. In-progress milestones count as half.
+    Repo activity is fetched live from the GitHub API.
+  </footer>
+</div>
+
+<script>
+(() => {
+  const EDITS_KEY = "tracker-edits-v1";
+  const THEME_KEY = "tracker-theme";
+  const GH_CACHE_KEY = "tracker-gh-v1";
+  const ORDER = ["todo", "doing", "done"];
+
+  const store = {
+    get(k, fallback) {
+      try { const v = localStorage.getItem(k); return v == null ? fallback : JSON.parse(v); } catch { return fallback; }
+    },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+    del(k) { try { localStorage.removeItem(k); } catch {} },
+  };
+
+  let data = null;
+  let base = null;
+  let edits = store.get(EDITS_KEY, {});
+  const gh = {};
+  const ui = { q: "", status: "all", cat: "all", sort: "pct-desc", open: new Set() };
+
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  function applyTheme(t) {
+    if (t) document.documentElement.setAttribute("data-theme", t);
+    else document.documentElement.removeAttribute("data-theme");
+  }
+  applyTheme(store.get(THEME_KEY, null));
+  $("theme").addEventListener("click", () => {
+    const cur = document.documentElement.getAttribute("data-theme") ||
+      (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    const next = cur === "dark" ? "light" : "dark";
+    applyTheme(next);
+    store.set(THEME_KEY, next);
+  });
+
+  function stateOf(p, i) {
+    const k = p.id + ":" + i;
+    return edits[k] || p.milestones[i].state;
+  }
+
+  function score(p) {
+    const n = p.milestones.length || 1;
+    let d = 0, h = 0;
+    p.milestones.forEach((_, i) => {
+      const s = stateOf(p, i);
+      if (s === "done") d++;
+      else if (s === "doing") h++;
+    });
+    return { done: d, doing: h, total: p.milestones.length, pct: Math.round(((d + h * 0.5) / n) * 100) };
+  }
+
+  function lastPushed(p) {
+    let best = 0;
+    for (const r of p.repos) {
+      const t = gh[r] && gh[r].pushed_at ? Date.parse(gh[r].pushed_at) : 0;
+      if (t > best) best = t;
+    }
+    return best;
+  }
+
+  function ago(ms) {
+    if (!ms) return null;
+    const days = Math.floor((Date.now() - ms) / 86400000);
+    if (days <= 0) return "today";
+    if (days === 1) return "yesterday";
+    if (days < 30) return days + "d ago";
+    if (days < 365) return Math.floor(days / 30) + "mo ago";
+    return Math.floor(days / 365) + "y ago";
+  }
+
+  function renderKpis() {
+    let d = 0, h = 0, t = 0, active = 0;
+    for (const p of data.projects) {
+      const s = score(p);
+      d += s.done; h += s.doing; t += s.total;
+      if (p.status === "active") active++;
+    }
+    $("k-overall").innerHTML = Math.round(((d + h * 0.5) / (t || 1)) * 100) + "<small>%</small>";
+    $("k-ms").innerHTML = d + "<small> / " + t + " done</small>";
+    $("k-active").innerHTML = active + "<small> of " + data.projects.length + "</small>";
+    $("k-doing").innerHTML = h + "<small> milestones</small>";
+  }
+
+  function card(p) {
+    const s = score(p);
+    const dW = (s.done / (s.total || 1)) * 100;
+    const pW = (s.doing / (s.total || 1)) * 100;
+    const pushed = ago(lastPushed(p));
+    const stars = p.repos.reduce((a, r) => a + ((gh[r] && gh[r].stargazers_count) || 0), 0);
+    const repoLinks = p.repos.map((r) =>
+      `<a href="https://github.com/${esc(data.owner)}/${esc(r)}" target="_blank" rel="noopener">${esc(r)}</a>`).join(" ");
+    const items = p.milestones.map((m, i) => {
+      const st = stateOf(p, i);
+      const label = st === "done" ? "Done" : st === "doing" ? "In progress" : "To do";
+      return `<li class="${st}">
+        <button class="state ${st}" type="button" data-p="${esc(p.id)}" data-i="${i}"
+          aria-label="${esc(m.title)}: ${label}. Click to change.">${st === "done" ? "✓" : ""}</button>
+        <span class="t">${esc(m.title)}</span></li>`;
+    }).join("");
+    return `<article class="card">
+      <div class="card-top">
+        <div><h2>${esc(p.name)}</h2><div class="cat">${esc(p.category)}</div></div>
+        <span class="status ${esc(p.status)}">${esc(p.status)}</span>
+      </div>
+      <p class="tagline">${esc(p.tagline)}</p>
+      <div class="progress" title="${s.done} done, ${s.doing} in progress, ${s.total - s.done - s.doing} to do">
+        <div class="bar" role="progressbar" aria-valuenow="${s.pct}" aria-valuemin="0" aria-valuemax="100" aria-label="${esc(p.name)} completion">
+          <span class="d" style="width:${dW}%"></span><span class="p" style="width:${pW}%"></span>
+        </div>
+        <span class="pct">${s.pct}%</span>
+      </div>
+      <div class="meta mono">
+        <span>${s.done}/${s.total} milestones</span>
+        ${pushed ? `<span>pushed ${pushed}</span>` : ""}
+        ${stars ? `<span>★ ${stars}</span>` : ""}
+      </div>
+      ${p.next ? `<div class="next"><b>Next:</b> ${esc(p.next)}</div>` : ""}
+      <details data-id="${esc(p.id)}" ${ui.open.has(p.id) ? "open" : ""}>
+        <summary>Milestones</summary>
+        <ul class="ms">${items}</ul>
+      </details>
+      <div class="meta mono">${repoLinks}</div>
+    </article>`;
+  }
+
+  function render() {
+    const q = ui.q.trim().toLowerCase();
+    let list = data.projects.filter((p) => {
+      if (ui.status !== "all" && p.status !== ui.status) return false;
+      if (ui.cat !== "all" && p.category !== ui.cat) return false;
+      if (!q) return true;
+      const hay = [p.name, p.tagline, p.category, p.next, ...p.repos, ...p.milestones.map((m) => m.title)].join(" ").toLowerCase();
+      return hay.includes(q);
+    });
+    const by = {
+      "pct-desc": (a, b) => score(b).pct - score(a).pct,
+      "pct-asc": (a, b) => score(a).pct - score(b).pct,
+      pushed: (a, b) => lastPushed(b) - lastPushed(a),
+      name: (a, b) => a.name.localeCompare(b.name),
+    }[ui.sort];
+    list = list.slice().sort(by);
+    $("grid").innerHTML = list.map(card).join("");
+    $("empty").hidden = list.length > 0;
+    $("banner").classList.toggle("show", Object.keys(edits).length > 0);
+    renderKpis();
+  }
+
+  $("grid").addEventListener("click", (e) => {
+    const b = e.target.closest(".state");
+    if (!b) return;
+    const p = data.projects.find((x) => x.id === b.dataset.p);
+    const i = Number(b.dataset.i);
+    const next = ORDER[(ORDER.indexOf(stateOf(p, i)) + 1) % ORDER.length];
+    const k = p.id + ":" + i;
+    if (next === base.get(k)) delete edits[k];
+    else edits[k] = next;
+    store.set(EDITS_KEY, edits);
+    render();
+  });
+  $("grid").addEventListener("toggle", (e) => {
+    const d = e.target;
+    if (d.tagName !== "DETAILS") return;
+    if (d.open) ui.open.add(d.dataset.id); else ui.open.delete(d.dataset.id);
+  }, true);
+
+  $("q").addEventListener("input", (e) => { ui.q = e.target.value; render(); });
+  $("status-chips").addEventListener("click", (e) => {
+    const c = e.target.closest(".chip");
+    if (!c) return;
+    ui.status = c.dataset.status;
+    document.querySelectorAll("#status-chips .chip").forEach((x) => x.setAttribute("aria-pressed", String(x === c)));
+    render();
+  });
+  $("cat").addEventListener("change", (e) => { ui.cat = e.target.value; render(); });
+  $("sort").addEventListener("change", (e) => { ui.sort = e.target.value; render(); });
+
+  $("reset").addEventListener("click", () => { edits = {}; store.del(EDITS_KEY); render(); });
+  $("export").addEventListener("click", () => {
+    const out = JSON.parse(JSON.stringify(data));
+    out.updated = new Date().toISOString().slice(0, 10);
+    out.projects.forEach((p) => p.milestones.forEach((m, i) => { m.state = stateOf(p, i); }));
+    const blob = new Blob([JSON.stringify(out, null, 2) + "\n"], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "projects.json";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+
+  async function loadGitHub() {
+    let cache = null;
+    try { cache = JSON.parse(sessionStorage.getItem(GH_CACHE_KEY)); } catch {}
+    if (cache && Date.now() - cache.at < 10 * 60 * 1000) {
+      Object.assign(gh, cache.repos);
+      render();
+      return;
+    }
+    const repos = [...new Set(data.projects.flatMap((p) => p.repos))];
+    await Promise.all(repos.map(async (r) => {
+      try {
+        const res = await fetch(`https://api.github.com/repos/${data.owner}/${r}`);
+        if (!res.ok) return;
+        const j = await res.json();
+        gh[r] = { pushed_at: j.pushed_at, stargazers_count: j.stargazers_count };
+      } catch {}
+    }));
+    try { sessionStorage.setItem(GH_CACHE_KEY, JSON.stringify({ at: Date.now(), repos: gh })); } catch {}
+    render();
+  }
+
+  fetch("projects.json", { cache: "no-cache" })
+    .then((r) => r.json())
+    .then((j) => {
+      data = j;
+      base = new Map();
+      data.projects.forEach((p) => p.milestones.forEach((m, i) => base.set(p.id + ":" + i, m.state)));
+      for (const k of Object.keys(edits)) if (!base.has(k)) delete edits[k];
+      $("updated").textContent = "Last updated " + data.updated + ".";
+      const cats = [...new Set(data.projects.map((p) => p.category))].sort();
+      $("cat").insertAdjacentHTML("beforeend", cats.map((c) => `<option>${esc(c)}</option>`).join(""));
+      render();
+      loadGitHub();
+    })
+    .catch(() => { $("grid").innerHTML = '<p class="empty">Could not load projects.json.</p>'; });
+})();
+</script>
+</body>
+</html>

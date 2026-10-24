@@ -1,0 +1,177 @@
+{
+  "owner": "CorpLynx",
+  "updated": "2026-10-24",
+  "projects": [
+    {
+      "id": "aaru",
+      "name": "Aaru",
+      "tagline": "Invite-only, self-hosted AI inference: an OpenAI-compatible API and a web chat app served from one Framework Desktop.",
+      "category": "AI platform",
+      "status": "active",
+      "repos": ["aaru", "aaru-web"],
+      "next": "Run the first image build and the first encrypted backup, then the restore drill.",
+      "milestones": [
+        { "title": "Build specification and architecture", "state": "done" },
+        { "title": "Design system and surface specs", "state": "done" },
+        { "title": "Quadlet units, network segmentation, per-service DB roles", "state": "done" },
+        { "title": "Web app rebrand on Open WebUI (aaru-web)", "state": "done" },
+        { "title": "Encrypted S3 backups: first run and restore drill", "state": "doing" },
+        { "title": "Trivy-gated, digest-pinned image pipeline: first build", "state": "doing" },
+        { "title": "Host hardening automation and image pinning", "state": "todo" },
+        { "title": "Move from interim GPU box to the Framework Desktop", "state": "todo" },
+        { "title": "First invited members using it", "state": "todo" }
+      ]
+    },
+    {
+      "id": "asgard",
+      "name": "A.S.G.A.R.D.",
+      "tagline": "Developer QoL suite for enterprise work: a launcher plus apps that turn git history and calendar data into approved time in Jira.",
+      "category": "Developer tools",
+      "status": "active",
+      "repos": ["asgard"],
+      "next": "Finish the Ysildir MCP spec (on-prem reconciliation and acceptance), then cut a tagged release.",
+      "milestones": [
+        { "title": "Launcher shell with app tiles and settings", "state": "done" },
+        { "title": "Odin (Jira / meetings)", "state": "done" },
+        { "title": "Baldur (time estimates from git + calendar)", "state": "done" },
+        { "title": "Muninn (local store) and Heimdall", "state": "done" },
+        { "title": "Independent adversarial review of auto-approve", "state": "done" },
+        { "title": "Packaged PyInstaller build", "state": "done" },
+        { "title": "Ysildir MCP spec (11 of 14 tasks)", "state": "doing" },
+        { "title": "Freya (spec written, app not built)", "state": "todo" },
+        { "title": "Top-level README and first GitHub release", "state": "todo" }
+      ]
+    },
+    {
+      "id": "anubis",
+      "name": "Anubis",
+      "tagline": "Offline-first security scanner for local AI model files and runtimes: GGUF, Safetensors, chat templates, exposed local servers.",
+      "category": "Security",
+      "status": "active",
+      "repos": ["Anubis"],
+      "next": "Tag a release and publish to PyPI so people can pip install it.",
+      "milestones": [
+        { "title": "GGUF and Safetensors binary integrity checks", "state": "done" },
+        { "title": "Model directory hygiene and chat-template scanning", "state": "done" },
+        { "title": "Local AI service discovery and probing", "state": "done" },
+        { "title": "Ollama advisory matching (OSV snapshot)", "state": "done" },
+        { "title": "JSON and SARIF reporting", "state": "done" },
+        { "title": "Test suite, fuzzing and CI", "state": "done" },
+        { "title": "Advisories beyond Ollama (llama.cpp, vLLM, LM Studio)", "state": "todo" },
+        { "title": "Tagged release on PyPI", "state": "todo" }
+      ]
+    },
+    {
+      "id": "plugins-and-tools",
+      "name": "Plugins and Tools",
+      "tagline": "Standalone CLIs and OpenCode plugins: reversible IP redaction, AWS topology mapping, a Kiro model provider.",
+      "category": "Developer tools",
+      "status": "active",
+      "repos": ["plugins-and-tools"],
+      "next": "Land the restructure PR that moves the OpenCode plugins into plugins/.",
+      "milestones": [
+        { "title": "ip-redactor CLI (keyed, reversible, subnet-preserving)", "state": "done" },
+        { "title": "topomapper (AWS topology to draw.io / SVG)", "state": "done" },
+        { "title": "Test infra estate (Terraform)", "state": "done" },
+        { "title": "Per-project CI", "state": "done" },
+        { "title": "opencode-kiro-provider published to npm", "state": "done" },
+        { "title": "Move plugins into the new layout", "state": "doing" },
+        { "title": "opencode-ghe-policy", "state": "doing" },
+        { "title": "opencode-hardened patched build", "state": "todo" },
+        { "title": "opencode-ipredact plugin", "state": "todo" }
+      ]
+    },
+    {
+      "id": "lza-pr-validator",
+      "name": "LZA PR Validator",
+      "tagline": "Catches AWS Landing Zone Accelerator config errors in pull requests before they reach the deployment pipeline.",
+      "category": "Cloud / IaC",
+      "status": "paused",
+      "repos": ["lza-pr-validator"],
+      "next": "Add tests around the buildspec stages and tag a v2 release.",
+      "milestones": [
+        { "title": "YAML linting layer", "state": "done" },
+        { "title": "LZA validate-config with prepare-stage parity", "state": "done" },
+        { "title": "Concurrent CDK synth (prepare / security / customizations)", "state": "done" },
+        { "title": "GitHub Actions to CodeBuild via S3", "state": "done" },
+        { "title": "Valid and invalid example configs", "state": "done" },
+        { "title": "v1 to v2 migration guide", "state": "done" },
+        { "title": "Automated tests for the validator itself", "state": "todo" },
+        { "title": "Tagged release", "state": "todo" }
+      ]
+    },
+    {
+      "id": "parkinsons-research",
+      "name": "Parkinson's Research Pipeline",
+      "tagline": "Local, distributed in-silico triage for Parkinson's drug discovery across a Mac mini and two Linux GPU nodes.",
+      "category": "Research",
+      "status": "active",
+      "repos": ["parkinsons-research"],
+      "next": "Run target preparation end to end on the GPU nodes and record a first docking batch.",
+      "milestones": [
+        { "title": "Hardware and cluster architecture guide", "state": "done" },
+        { "title": "ChEMBL LRRK2 / GBA1 ligand library", "state": "done" },
+        { "title": "CNS / BBB filtering and target prep scripts", "state": "done" },
+        { "title": "Master pipeline with tests and CI", "state": "done" },
+        { "title": "Structure prediction and docking on the GPU nodes", "state": "todo" },
+        { "title": "First scored candidate list", "state": "todo" },
+        { "title": "Results write-up", "state": "todo" }
+      ]
+    },
+    {
+      "id": "ai-debate",
+      "name": "AI Debate",
+      "tagline": "Orchestrates and moderates formal debates between AI models with personality profiles and named rhetorical tactics.",
+      "category": "AI apps",
+      "status": "paused",
+      "repos": ["ai-debate"],
+      "next": "Add CI for the existing test suite and record a sample debate for the README.",
+      "milestones": [
+        { "title": "Debate orchestrator and moderation", "state": "done" },
+        { "title": "Personality system (four dimensions)", "state": "done" },
+        { "title": "Debate tactics library", "state": "done" },
+        { "title": "OpenAI, Anthropic and local providers", "state": "done" },
+        { "title": "Property-based test suite", "state": "done" },
+        { "title": "Docs and examples", "state": "done" },
+        { "title": "CI pipeline", "state": "todo" },
+        { "title": "Sample transcripts / demo", "state": "todo" }
+      ]
+    },
+    {
+      "id": "mc-mcp",
+      "name": "Minecraft MCP Bridge",
+      "tagline": "Lets LLMs act in a Minecraft server via MCP: an MCP server, a WebSocket bridge, and a NeoForge mod.",
+      "category": "AI apps",
+      "status": "paused",
+      "repos": ["mc-mcp"],
+      "next": "Finish the remaining core bridge tasks before starting advanced features.",
+      "milestones": [
+        { "title": "MCP server exposing game tools", "state": "done" },
+        { "title": "WebSocket bridge with auth, routing, reconnection", "state": "done" },
+        { "title": "Docker deployment", "state": "done" },
+        { "title": "Core bridge spec (31 of 54 tasks)", "state": "doing" },
+        { "title": "NeoForge mod hardening and integration tests", "state": "doing" },
+        { "title": "Advanced features spec (3 of 67 tasks)", "state": "todo" }
+      ]
+    },
+    {
+      "id": "gcp-foundation",
+      "name": "GCP FedRAMP-High Foundation",
+      "tagline": "GCP organization foundation, first on Google's FAST, then rebuilt in plain Terraform with only native providers.",
+      "category": "Cloud / IaC",
+      "status": "paused",
+      "repos": ["gcp-vanilla-tf-foundation", "fast-stage-0", "fast-modules", "stellar-engine-modules", "gcp-fast-poc", "gcp-terraform-tests"],
+      "next": "Add plan / validate CI to the vanilla build and move tfvars out of the repo.",
+      "milestones": [
+        { "title": "FAST proof of concept", "state": "done" },
+        { "title": "Stage 0 bootstrap (org setup)", "state": "done" },
+        { "title": "Module store for FAST", "state": "done" },
+        { "title": "Workload identity / IaC bootstrap module", "state": "done" },
+        { "title": "Plain-Terraform rebuild of stages 0 to 2", "state": "done" },
+        { "title": "Assured Workloads (FedRAMP High)", "state": "doing" },
+        { "title": "Validate / plan CI", "state": "todo" },
+        { "title": "Compliance control mapping doc", "state": "todo" }
+      ]
+    }
+  ]
+}
