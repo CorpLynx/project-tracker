@@ -23,6 +23,33 @@
       ]
     },
     {
+      "id": "ground-news-local",
+      "name": "ground-news-local",
+      "tagline": "Self-hosted tracker that follows breaking news and finds the bills, rules and foreign-lobbying (FARA) filings behind each story, with a daily brief.",
+      "category": "AI apps",
+      "status": "active",
+      "repos": ["ground-news-local"],
+      "next": "First deploy on the home server, then backups and failure alerts.",
+      "milestones": [
+        { "title": "Python port of Meridian's feed and article pipeline", "state": "done" },
+        { "title": "Self-hosted deploy: Quadlet units, VPN-only scraping, own Postgres + pgvector", "state": "done" },
+        { "title": "Local models for analysis and embeddings", "state": "done" },
+        { "title": "Collectors: Congress.gov bills, Federal Register, FARA registrations", "state": "done" },
+        { "title": "Stories with heat scores; story-filing links reviewed by Claude", "state": "done" },
+        { "title": "Daily brief from Claude, sanitised before display", "state": "done" },
+        { "title": "Entity-based links, bill sponsors and subjects, feed health report", "state": "done" },
+        { "title": "Duplicate-story merging and neutral story titles", "state": "done" },
+        { "title": "Story pages on a private, read-only site", "state": "done" },
+        { "title": "First deploy and first real data", "state": "doing" },
+        { "title": "Database backups and failure alerts", "state": "todo" },
+        { "title": "Tune story thresholds on real data", "state": "todo" },
+        { "title": "Claude summaries of long bills and rules", "state": "todo" },
+        { "title": "Social media collectors", "state": "todo" },
+        { "title": "CI for tests and typecheck", "state": "todo" },
+        { "title": "Retire Meridian's Cloudflare scrapers", "state": "todo" }
+      ]
+    },
+    {
       "id": "asgard",
       "name": "A.S.G.A.R.D.",
       "tagline": "Developer QoL suite for enterprise work: a launcher plus apps that turn git history and calendar data into approved time in Jira.",
