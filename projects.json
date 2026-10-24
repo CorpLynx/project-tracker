@@ -160,7 +160,7 @@
       "tagline": "GCP organization foundation, first on Google's FAST, then rebuilt in plain Terraform with only native providers.",
       "category": "Cloud / IaC",
       "status": "paused",
-      "repos": ["gcp-vanilla-tf-foundation", "fast-stage-0", "fast-modules", "stellar-engine-modules", "gcp-fast-poc", "gcp-terraform-tests"],
+      "repos": ["gcp-vanilla-tf-foundation", "gcp-terraform-tests"],
       "next": "Add plan / validate CI to the vanilla build and move tfvars out of the repo.",
       "milestones": [
         { "title": "FAST proof of concept", "state": "done" },
